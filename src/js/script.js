@@ -1,3 +1,5 @@
+/* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
+
 {
   ('use strict');
 
@@ -9,7 +11,16 @@
     containerOf: {
       booksList: '.books-list',
     },
+
+    book: {
+      image: '.books-list .book__image',
+    },
   };
+
+  const classFav = {
+    favorite: 'favorite',
+  };
+
   const templates = {
     books: Handlebars.compile(
       document.querySelector(select.templateOf.book).innerHTML
@@ -31,5 +42,26 @@
     }
   };
 
+  const favoriteBooks = [];
+
+  function initActions() {
+    const bookList = document.querySelectorAll(select.book.image);
+
+    for (let book of bookList) {
+      //add event listener
+      book.addEventListener('dblclick', function (event) {
+        //prevent default action
+        event.preventDefault();
+        //add .favorite
+        book.classList.add(classFav.favorite);
+        // get book attribute from data-id
+        const bookId = book.getAttribute('data-id');
+        //add book to array
+        favoriteBooks.push(bookId);
+      });
+    }
+  }
+
   render();
+  initActions();
 }
