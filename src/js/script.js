@@ -45,31 +45,32 @@
   const favoriteBooks = [];
 
   function initActions() {
-    const bookList = document.querySelectorAll(select.book.image);
-    for (let book of bookList) {
-      //add event listener
-      book.addEventListener('dblclick', function (event) {
-        //prevent default action
-        event.preventDefault();
-        // get book attribute from data-id
-        const bookId = book.getAttribute('data-id');
+    const bookList = document.querySelector(select.containerOf.booksList);
+    // addEventListener to bookList
+    bookList.addEventListener('dblclick', function (event) {
+      //prevent default action
+      event.preventDefault();
+      const clickOnBook = event.target;
+      if (clickOnBook.offsetParent.classList.contains('book__image')) {
+        const bookId = clickOnBook.offsetParent.getAttribute('data-id');
         //check... if array doesn't contains bookId...
         if (!favoriteBooks.includes(bookId)) {
           //add class 'favorite'...
-          book.classList.add(classFav.favorite);
+          clickOnBook.offsetParent.classList.add(classFav.favorite);
           //...and add bookId to favoriteBooks array
           favoriteBooks.push(bookId);
           //..else it already contains
         } else {
           //remove class 'favorite'...
-          book.classList.remove(classFav.favorite);
+          clickOnBook.offsetParent.classList.remove(classFav.favorite);
           //..and remove bookID from array favoriteBooks
           const bookIndex = favoriteBooks.indexOf(bookId);
           favoriteBooks.splice(bookIndex, 1);
         }
-      });
-    }
+      }
+    });
   }
+
   render();
   initActions();
 }
