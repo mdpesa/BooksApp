@@ -138,7 +138,6 @@
 //   determineRatingBgc();
 // }
 
-/*
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 {
   ('use strict');
@@ -167,14 +166,16 @@
       document.querySelector(select.templateOf.book).innerHTML
     ),
   };
-  const favoriteBooks = [];
-  const filters = [];
 
   class BooksList {
     constructor() {
       const thisBooksList = this;
 
+      this.favoriteBooks = [];
+      this.filters = [];
+
       thisBooksList.initData();
+      thisBooksList.render();
       thisBooksList.getElements();
       thisBooksList.initActions();
       thisBooksList.filterBooks();
@@ -183,7 +184,9 @@
 
     initData() {
       this.data = dataSource.books;
+    }
 
+    render() {
       for (const book of this.data) {
         const ratingBgc = this.determineRatingBgc(book.rating);
         const ratingWidth = ratingBgc * 10;
@@ -197,7 +200,6 @@
         booksContainer.appendChild(generateDOMElement);
       }
     }
-
     getElements() {
       const thisBooksList = this;
 
@@ -217,13 +219,13 @@
         const clickOnBook = event.target;
         if (clickOnBook.offsetParent.classList.contains('book__image')) {
           const bookId = clickOnBook.offsetParent.getAttribute('data-id');
-          if (!favoriteBooks.includes(bookId)) {
+          if (!this.favoriteBooks.includes(bookId)) {
             clickOnBook.offsetParent.classList.add(classFav.favorite);
-            favoriteBooks.push(bookId);
+            this.favoriteBooks.push(bookId);
           } else {
             clickOnBook.offsetParent.classList.remove(classFav.favorite);
-            const bookIndex = favoriteBooks.indexOf(bookId);
-            favoriteBooks.splice(bookIndex, 1);
+            const bookIndex = this.favoriteBooks.indexOf(bookId);
+            this.favoriteBooks.splice(bookIndex, 1);
           }
         }
       });
@@ -238,12 +240,12 @@
           const filterValue = booksFilter.value;
           console.log(filterValue);
           if (booksFilter.checked == true) {
-            filters.push(filterValue);
+            this.filters.push(filterValue);
           } else {
-            const checkedValue = filters.indexOf(filterValue);
-            filters.splice(checkedValue, 1);
+            const checkedValue = this.filters.indexOf(filterValue);
+            this.filters.splice(checkedValue, 1);
           }
-          console.log('filters:', filters);
+          console.log('filters:', this.filters);
         }
         thisBooksList.filterBooks();
       });
@@ -253,7 +255,7 @@
       for (const book of dataSource.books) {
         let shouldBeHidden = false;
 
-        for (const filter of filters) {
+        for (const filter of this.filters) {
           if (!book.details[filter]) {
             shouldBeHidden = true;
             break;
