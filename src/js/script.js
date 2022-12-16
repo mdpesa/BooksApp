@@ -171,6 +171,9 @@
     constructor() {
       const thisBooksList = this;
 
+      thisBooksList.filters = [];
+      thisBooksList.favoriteBooks = [];
+
       thisBooksList.initData();
       thisBooksList.render();
       thisBooksList.getElements();
@@ -212,21 +215,18 @@
     initActions() {
       const thisBooksList = this;
 
-      const favoriteBooks = [];
-      const filters = [];
-
       thisBooksList.container.addEventListener('dblclick', function (event) {
         event.preventDefault();
         const clickOnBook = event.target;
         if (clickOnBook.offsetParent.classList.contains('book__image')) {
           const bookId = clickOnBook.offsetParent.getAttribute('data-id');
-          if (!favoriteBooks.includes(bookId)) {
+          if (!thisBooksList.favoriteBooks.includes(bookId)) {
             clickOnBook.offsetParent.classList.add(classFav.favorite);
-            favoriteBooks.push(bookId);
+            thisBooksList.favoriteBooks.push(bookId);
           } else {
             clickOnBook.offsetParent.classList.remove(classFav.favorite);
-            const bookIndex = favoriteBooks.indexOf(bookId);
-            favoriteBooks.splice(bookIndex, 1);
+            const bookIndex = thisBooksList.favoriteBooks.indexOf(bookId);
+            thisBooksList.favoriteBooks.splice(bookIndex, 1);
           }
         }
       });
@@ -241,14 +241,14 @@
           const filterValue = booksFilter.value;
           console.log(filterValue);
           if (booksFilter.checked == true) {
-            filters.push(filterValue);
+            thisBooksList.filters.push(filterValue);
           } else {
-            const checkedValue = filters.indexOf(filterValue);
-            filters.splice(checkedValue, 1);
+            const checkedValue = thisBooksList.filters.indexOf(filterValue);
+            thisBooksList.filters.splice(checkedValue, 1);
           }
-          console.log('filters:', filters);
+          console.log('filters:', thisBooksList.filters);
         }
-        thisBooksList.filterBooks(filters);
+        thisBooksList.filterBooks(thisBooksList.filters);
       });
     }
 
